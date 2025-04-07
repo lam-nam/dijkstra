@@ -1,0 +1,110 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <title>Graph Input Form</title>
+    <style>
+      body {
+        font-family: Arial;
+        padding: 20px;
+      }
+      .vertex-block {
+        border: 1px solid #ccc;
+        padding: 10px;
+        margin-bottom: 10px;
+      }
+      .adj-row {
+        margin-bottom: 5px;
+      }
+    </style>
+    <script>
+      function generateVertexForms() {
+        const count = parseInt(document.getElementById("vertexCount").value);
+        const container = document.getElementById("vertexContainer");
+        container.innerHTML = "";
+
+        for (let i = 0; i < count; i++) {
+          container.innerHTML += `
+          <div class="vertex-block">
+            <h4>Vertex ${i + 1}</h4>
+            Name: <input type="text" name="vertices[${i}][name]" required><br><br>
+            Number of adjacent vertices:
+            <input type="number" name="vertices[${i}][adjCount]" min="0" onchange="generateAdjInputs(${i}, this.value)" required><br>
+            <div id="adjContainer-${i}" class="adj-container"></div>
+          </div>
+        `;
+        }
+      }
+
+      function generateAdjInputs(vertexIndex, count) {
+        const container = document.getElementById(
+          `adjContainer-${vertexIndex}`
+        );
+        container.innerHTML = "";
+
+        for (let j = 0; j < count; j++) {
+          container.innerHTML += `
+          <div class="adj-row">
+            Adjacent Vertex ${j + 1}: 
+            <input type="text" name="vertices[${vertexIndex}][adj][${j}][name]" required>
+            Weight: 
+            <input type="number" name="vertices[${vertexIndex}][adj][${j}][weight]" required>
+          </div>
+        `;
+        }
+      }
+    </script>
+  </head>
+  <body>
+    <h2>Create Graph</h2>
+
+    <label>How many vertices do you want to add?</label>
+    <input type="number" id="vertexCount" min="1" />
+    <button type="button" onclick="generateVertexForms()">Generate</button>
+
+    <form method="POST" action="/add-vertex">
+      <div id="vertexContainer"></div>
+      <br />
+      <button type="submit">Add All Vertices</button>
+    </form>
+
+    <hr />
+
+    <h2>Find Shortest Path</h2>
+    <form method="POST" action="/find-path">
+      Start Vertex: <input type="text" name="start" required /> End Vertex:
+      <input type="text" name="end" required />
+      <button type="submit">Find Path</button>
+    </form>
+
+    <% if (path && path.length) { %>
+    <h3>Shortest Path:</h3>
+    <p><%= path.join(' → ') %></p>
+    <h4>Distance: <%= distance %></h4>
+    <!-- Hiển thị độ dài của đường đi ngắn nhất -->
+    <% } else if (typeof path !== 'undefined') { %>
+    <p>No path found.</p>
+    <% } %>
+
+    <hr />
+
+    <h2>Current Graph</h2>
+    <% if (graph && Object.keys(graph).length > 0) { %>
+    <ul>
+      <% for (let vertex in graph) { %>
+      <li>
+        <strong><%= vertex %></strong>: <% const edges = graph[vertex]; %> <%
+        for (let adj in edges) { %> <%= adj %> (<%= edges[adj] %>) <% } %>
+      </li>
+      <% } %>
+    </ul>
+    <form method="POST" action="/reset-graph">
+      <button type="submit" style="background: red; color: white">
+        Reset Graph
+      </button>
+    </form>
+    <% } else { %>
+    <p><i>No vertices in the graph yet.</i></p>
+    <% } %>
+  </body>
+</html>
