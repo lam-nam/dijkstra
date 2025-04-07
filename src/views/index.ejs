@@ -26,9 +26,9 @@
         for (let i = 0; i < count; i++) {
           container.innerHTML += `
           <div class="vertex-block">
-            <h4>Vertex ${i + 1}</h4>
-            Name: <input type="text" name="vertices[${i}][name]" required><br><br>
-            Number of adjacent vertices:
+            <h4>Đỉnh ${i + 1}</h4>
+            Tên đỉnh: <input type="text" name="vertices[${i}][name]" required><br><br>
+            Số đỉnh liền kề:
             <input type="number" name="vertices[${i}][adjCount]" min="0" onchange="generateAdjInputs(${i}, this.value)" required><br>
             <div id="adjContainer-${i}" class="adj-container"></div>
           </div>
@@ -45,9 +45,9 @@
         for (let j = 0; j < count; j++) {
           container.innerHTML += `
           <div class="adj-row">
-            Adjacent Vertex ${j + 1}: 
+         Đỉnh liền kề ${j + 1}: 
             <input type="text" name="vertices[${vertexIndex}][adj][${j}][name]" required>
-            Weight: 
+           Trọng số: 
             <input type="number" name="vertices[${vertexIndex}][adj][${j}][weight]" required>
           </div>
         `;
@@ -56,39 +56,39 @@
     </script>
   </head>
   <body>
-    <h2>Create Graph</h2>
+    <h2>TẠO ĐỒ THỊ</h2>
 
-    <label>How many vertices do you want to add?</label>
+    <label>Nhập số đỉnh của đồ thị</label>
     <input type="number" id="vertexCount" min="1" />
-    <button type="button" onclick="generateVertexForms()">Generate</button>
+    <button type="button" onclick="generateVertexForms()">Tạo</button>
 
     <form method="POST" action="/add-vertex">
       <div id="vertexContainer"></div>
       <br />
-      <button type="submit">Add All Vertices</button>
+      <button type="submit">Thêm tất cả các đỉnh</button>
     </form>
 
     <hr />
 
-    <h2>Find Shortest Path</h2>
+    <h2>Tìm đường đi ngắn nhất</h2>
     <form method="POST" action="/find-path">
-      Start Vertex: <input type="text" name="start" required /> End Vertex:
+      Đỉnh bắt đầu: <input type="text" name="start" required /> Đỉnh kết thúc:
       <input type="text" name="end" required />
-      <button type="submit">Find Path</button>
+      <button type="submit">Tìm đường</button>
     </form>
 
     <% if (path && path.length) { %>
-    <h3>Shortest Path:</h3>
+    <h3>Đường đi ngắn nhất:</h3>
     <p><%= path.join(' → ') %></p>
-    <h4>Distance: <%= distance %></h4>
+    <h4>Trọng số: <%= distance %></h4>
     <!-- Hiển thị độ dài của đường đi ngắn nhất -->
     <% } else if (typeof path !== 'undefined') { %>
-    <p>No path found.</p>
+    <p>Không tìm thấy đường!</p>
     <% } %>
 
     <hr />
 
-    <h2>Current Graph</h2>
+    <h2>Đồ thị hiện tại</h2>
     <% if (graph && Object.keys(graph).length > 0) { %>
     <ul>
       <% for (let vertex in graph) { %>
@@ -100,11 +100,11 @@
     </ul>
     <form method="POST" action="/reset-graph">
       <button type="submit" style="background: red; color: white">
-        Reset Graph
+        Reset đồ thị
       </button>
     </form>
     <% } else { %>
-    <p><i>No vertices in the graph yet.</i></p>
+    <p><i>Đồ thị rỗng</i></p>
     <% } %>
   </body>
 </html>
